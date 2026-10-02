@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Circular Queue | Music Playlist Manager</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body id="home">
+
+<!-- ================= NAVBAR ================= -->
+
+<header class="navbar">
+
+    <div class="logo">
+        <div class="logo-icon">↻</div>
+        <span>Circular Queue</span>
+    </div>
+
+    <nav>
+        <a href="#definition">Concept</a>
+        <a href="#working">Working</a>
+        <a href="#flowchart">Flowchart</a>
+        <a href="#visualizer">Visualizer</a>
+        <a href="#algorithm">Pseudocode</a>
+        <a href="#complexity">Complexity</a>
+    </nav>
+
+</header>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="badge">
+            ✦ DATA STRUCTURES • MINI PROJECT
+        </div>
+
+        <h1>
+            Circular Queue
+            <span>Music Playlist Manager</span>
+        </h1>
+
+        <p>
+            Learn Circular Queue through a cute and interactive
+            real-world music playlist example.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="#visualizer" class="primary-btn">
+                🎵 Try Visualizer
+            </a>
+
+            <a href="#definition" class="secondary-btn">
+                📚 Learn Concept
+            </a>
+
+        </div>
+
+        <div class="hero-mini-info">
+
+            <div>
+                <strong>10</strong>
+                <span>Queue Slots</span>
+            </div>
+
+            <div>
+                <strong>O(1)</strong>
+                <span>Enqueue</span>
+            </div>
+
+            <div>
+                <strong>O(1)</strong>
+                <span>Dequeue</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="hero-visual">
+
+        <div class="glow glow-one"></div>
+        <div class="glow glow-two"></div>
+
+        <div class="music-card">
+
+            <div class="music-card-top">
+                <span>NOW PLAYING</span>
+                <span class="live-dot">●</span>
+            </div>
+
+            <div class="album-art">
+                ♪
+                <span>♫</span>
+            </div>
+
+            <h3 id="hero-song">Song A</h3>
+
+            <p>Music Playlist</p>
+
+            <div class="fake-progress">
+                <div></div>
+            </div>
+
+            <div class="music-buttons">
+                <span>↶</span>
+
+                <button>▶</button>
+
+                <span>↷</span>
+            </div>
+
+        </div>
+
+        <div class="music-note note-one">♪</div>
+        <div class="music-note note-two">♫</div>
+        <div class="music-note note-three">♬</div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= DEFINITION ================= -->
+
+<section class="section" id="definition">
+
+    <div class="section-heading">
+
+        <span>01 • CONCEPT</span>
+
+        <h2>What is a Circular Queue?</h2>
+
+        <p>
+            A simple exam-ready explanation of the concept.
+        </p>
+
+    </div>
+
+
+    <div class="definition-card">
+
+        <div class="definition-icon">
+            🔄
+        </div>
+
+        <div>
+
+            <div class="mini-label">DEFINITION</div>
+
+            <h3>Circular Queue</h3>
+
+            <p>
+                A Circular Queue is a linear data structure
+                in which the last position is connected back
+                to the first position, forming a circle.
+            </p>
+
+            <div class="memory-box">
+                <span>🧠 Remember:</span>
+                Last Position → First Position → Continue Again
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="info-grid">
+
+        <div class="info-card">
+            <div class="number">01</div>
+            <h3>Front</h3>
+            <p>
+                Points to the first element that will be
+                processed or removed.
+            </p>
+        </div>
+
+
+        <div class="info-card">
+            <div class="number">02</div>
+            <h3>Rear</h3>
+            <p>
+                Points to the position where a new element
+                is inserted.
+            </p>
+        </div>
+
+
+        <div class="info-card">
+            <div class="number">03</div>
+            <h3>FIFO</h3>
+            <p>
+                First In, First Out — first song added
+                is processed first.
+            </p>
+        </div>
+
+
+        <div class="info-card">
+            <div class="number">04</div>
+            <h3>Wrap Around</h3>
+            <p>
+                After index 9, the next position becomes
+                index 0.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= QUEUE CONDITIONS ================= -->
+
+<section class="section soft-section">
+
+    <div class="section-heading">
+
+        <span>02 • QUEUE STATE</span>
+
+        <h2>How do we know the Queue State?</h2>
+
+        <p>
+            The count tells us whether the queue is empty,
+            full or has available space.
+        </p>
+
+    </div>
+
+
+    <div class="state-grid">
+
+        <div class="state-card empty-state">
+
+            <div class="state-icon">🫧</div>
+
+            <div>
+                <span>EMPTY</span>
+
+                <h3>count == 0</h3>
+
+                <p>
+                    No songs are present in the queue.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="state-card available-state">
+
+            <div class="state-icon">🌱</div>
+
+            <div>
+                <span>AVAILABLE</span>
+
+                <h3>0 &lt; count &lt; 10</h3>
+
+                <p>
+                    There is still space to add songs.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="state-card full-state">
+
+            <div class="state-icon">🔴</div>
+
+            <div>
+                <span>FULL</span>
+
+                <h3>count == 10</h3>
+
+                <p>
+                    Queue is full and no new song can be added.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="exam-memory">
+
+        <div>🧠</div>
+
+        <div>
+
+            <strong>EXAM MEMORY TRICK</strong>
+
+            <p>
+                count = 0 → EMPTY &nbsp; | &nbsp;
+                count = 10 → FULL &nbsp; | &nbsp;
+                Between → AVAILABLE
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= HOW IT WORKS ================= -->
+
+<section class="section" id="working">
+
+    <div class="section-heading">
+
+        <span>03 • WORKING</span>
+
+        <h2>How does Circular Queue work?</h2>
+
+        <p>
+            Follow the song step-by-step.
+        </p>
+
+    </div>
+
+
+    <div class="working-timeline">
+
+        <div class="timeline-step">
+            <div class="timeline-number">1</div>
+
+            <div class="timeline-content">
+                <span>ENQUEUE</span>
+                <h3>🎵 Add a Song</h3>
+
+                <p>
+                    A new song is inserted at the Rear.
+                </p>
+            </div>
+        </div>
+
+
+        <div class="timeline-line"></div>
+
+
+        <div class="timeline-step">
+
+            <div class="timeline-number">2</div>
+
+            <div class="timeline-content">
+
+                <span>FRONT</span>
+
+                <h3>🎧 Select Current Song</h3>
+
+                <p>
+                    Front identifies the first song
+                    that should be played.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="timeline-line"></div>
+
+
+        <div class="timeline-step">
+
+            <div class="timeline-number">3</div>
+
+            <div class="timeline-content">
+
+                <span>DEQUEUE</span>
+
+                <h3>▶️ Play & Remove</h3>
+
+                <p>
+                    The Front song is processed and removed.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="timeline-line"></div>
+
+
+        <div class="timeline-step">
+
+            <div class="timeline-number">4</div>
+
+            <div class="timeline-content">
+
+                <span>CIRCULAR MOVE</span>
+
+                <h3>🔄 Move Forward</h3>
+
+                <p>
+                    Front or Rear moves using modulo.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="formula-card">
+
+        <div class="formula-icon">%</div>
+
+        <div>
+
+            <span>CIRCULAR FORMULA</span>
+
+            <h3>
+                Next Position = (Current + 1) % Capacity
+            </h3>
+
+            <p>
+                Example: (9 + 1) % 10 = 0
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FLOWCHART ================= -->
+
+<section class="section soft-section" id="flowchart">
+
+    <div class="section-heading">
+
+        <span>04 • VISUAL FLOWCHART</span>
+
+        <h2>Operation Flow</h2>
+
+        <p>
+            See the actual decision-making process visually.
+        </p>
+
+    </div>
+
+
+    <div class="flowchart-wrapper">
+
+
+        <!-- ENQUEUE -->
+
+        <div class="flowchart">
+
+            <div class="flowchart-heading">
+
+                <div class="flow-icon">＋</div>
+
+                <div>
+                    <span>OPERATION 01</span>
+                    <h3>Enqueue — Add Song</h3>
+                </div>
+
+            </div>
+
+
+            <div class="flow-column">
+
+                <div class="flow-node start-node">
+                    START
+                </div>
+
+                <div class="arrow-line"></div>
+
+                <div class="diamond-wrap">
+
+                    <div class="diamond">
+                        Queue<br>Full?
+                    </div>
+
+                </div>
+
+                <div class="branch-row">
+
+                    <div class="branch">
+
+                        <span class="yes-label">YES</span>
+
+                        <div class="flow-node danger-node">
+                            Queue<br>Full
+                        </div>
+
+                    </div>
+
+
+                    <div class="branch">
+
+                        <span class="no-label">NO</span>
+
+                        <div class="flow-node process-node">
+                            Rear =<br>
+                            (Rear + 1) % 10
+                        </div>
+
+                        <div class="arrow-line"></div>
+
+                        <div class="flow-node success-node">
+                            Insert Song
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="arrow-line"></div>
+
+                <div class="flow-node end-node">
+                    END
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DEQUEUE -->
+
+        <div class="flowchart">
+
+            <div class="flowchart-heading">
+
+                <div class="flow-icon play-flow">
+                    ▶
+                </div>
+
+                <div>
+                    <span>OPERATION 02</span>
+                    <h3>Dequeue — Play Song</h3>
+                </div>
+
+            </div>
+
+
+            <div class="flow-column">
+
+                <div class="flow-node start-node">
+                    START
+                </div>
+
+                <div class="arrow-line"></div>
+
+                <div class="diamond-wrap">
+
+                    <div class="diamond">
+                        Queue<br>Empty?
+                    </div>
+
+                </div>
+
+
+                <div class="branch-row">
+
+                    <div class="branch">
+
+                        <span class="yes-label">YES</span>
+
+                        <div class="flow-node danger-node">
+                            Queue<br>Empty
+                        </div>
+
+                    </div>
+
+
+                    <div class="branch">
+
+                        <span class="no-label">NO</span>
+
+                        <div class="flow-node success-node">
+                            Play Front<br>Song
+                        </div>
+
+                        <div class="arrow-line"></div>
+
+                        <div class="flow-node process-node">
+                            Front =<br>
+                            (Front + 1) % 10
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="arrow-line"></div>
+
+                <div class="flow-node end-node">
+                    END
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= PSEUDOCODE ================= -->
+
+<section class="section" id="algorithm">
+
+    <div class="section-heading">
+
+        <span>05 • EXAM READY</span>
+
+        <h2>Pseudocode</h2>
+
+        <p>
+            Easy pseudocode that you can remember for exams.
+        </p>
+
+    </div>
+
+
+    <div class="pseudo-grid">
+
+
+        <div class="pseudo-card">
+
+            <div class="pseudo-header">
+                <span>＋</span>
+
+                <div>
+                    <small>OPERATION 01</small>
+                    <h3>ENQUEUE — Add Song</h3>
+                </div>
+            </div>
+
+
+            <pre>
+ENQUEUE(song)
+
+IF count == capacity
+    Display "Queue Full"
+ELSE
+    rear = (rear + 1) % capacity
+    queue[rear] = song
+    count = count + 1
+END IF
+            </pre>
+
+        </div>
+
+
+        <div class="pseudo-card">
+
+            <div class="pseudo-header">
+
+                <span>▶</span>
+
+                <div>
+                    <small>OPERATION 02</small>
+                    <h3>DEQUEUE — Play Song</h3>
+                </div>
+
+            </div>
+
+
+            <pre>
+DEQUEUE()
+
+IF count == 0
+    Display "Queue Empty"
+ELSE
+    Play queue[front]
+    front = (front + 1) % capacity
+    count = count - 1
+END IF
+            </pre>
+
+        </div>
+
+    </div>
+
+
+    <div class="formula-memory">
+
+        <h3>🧠 Most Important Formula</h3>
+
+        <div>
+            <code>
+                (current + 1) % capacity
+            </code>
+        </div>
+
+        <p>
+            This formula makes the queue circular.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ================= REAL LIFE ================= -->
+
+<section class="section soft-section">
+
+    <div class="section-heading">
+
+        <span>06 • REAL-LIFE APPLICATION</span>
+
+        <h2>🎧 Music Playlist</h2>
+
+        <p>
+            A playlist is a simple way to understand
+            continuous circular movement.
+        </p>
+
+    </div>
+
+
+    <div class="playlist-story">
+
+        <div class="story-icon">
+            🎧
+        </div>
+
+        <div class="story-content">
+
+            <h3>Imagine a playlist of 10 songs</h3>
+
+            <p>
+                Songs are stored in the queue.
+                The first song reaches Front.
+                When Play is pressed, the Front song is
+                processed and Front moves forward.
+            </p>
+
+
+            <div class="playlist-path">
+
+                <span>🎵 A</span>
+                <b>→</b>
+
+                <span>🎵 B</span>
+                <b>→</b>
+
+                <span>🎵 C</span>
+                <b>→</b>
+
+                <span>...</span>
+                <b>→</b>
+
+                <span>🎵 J</span>
+                <b>↻</b>
+
+                <span>🎵 A</span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= VISUALIZER ================= -->
+
+<section class="section" id="visualizer">
+
+    <div class="section-heading">
+
+        <span>07 • INTERACTIVE VISUALIZER</span>
+
+        <h2>See Circular Queue in Action</h2>
+
+        <p>
+            Add songs, play songs and observe Front,
+            Rear and Queue State.
+        </p>
+
+    </div>
+
+
+    <div class="visualizer-card">
+
+
+        <!-- NOW PLAYING -->
+
+        <div class="now-playing">
+
+            <div class="now-art">
+                ♪
+            </div>
+
+            <div class="now-details">
+
+                <small>NOW PLAYING</small>
+
+                <h3 id="current-song">
+                    No song playing
+                </h3>
+
+                <p id="current-status">
+                    Add songs to begin
+                </p>
+
+            </div>
+
+            <div class="equalizer">
+
+                <i></i>
+                <i></i>
+                <i></i>
+                <i></i>
+                <i></i>
+
+            </div>
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="queue-status">
+
+            <div>
+                <small>FRONT</small>
+                <strong id="front-value">-</strong>
+            </div>
+
+            <div>
+                <small>REAR</small>
+                <strong id="rear-value">-</strong>
+            </div>
+
+            <div>
+                <small>SIZE</small>
+                <strong id="size-value">0 / 10</strong>
+            </div>
+
+            <div>
+                <small>STATE</small>
+                <strong id="state-value">EMPTY</strong>
+            </div>
+
+        </div>
+
+
+        <div class="queue-heading">
+
+            <span>QUEUE MEMORY</span>
+
+            <small>10 POSITIONS</small>
+
+        </div>
+
+
+        <!-- QUEUE -->
+
+        <div id="queue" class="queue"></div>
+
+
+        <!-- CONTROLS -->
+
+        <div class="queue-controls">
+
+            <button onclick="addSong()" class="primary-btn">
+                ＋ Add Song
+            </button>
+
+            <button onclick="playSong()" class="play-btn">
+                ▶ Play / Dequeue
+            </button>
+
+            <button onclick="resetQueue()" class="reset-btn">
+                ↻ Reset
+            </button>
+
+        </div>
+
+
+        <!-- MESSAGE -->
+
+        <div id="message" class="status-message">
+            ✨ Playlist is ready. Add your first song!
+        </div>
+
+
+        <!-- CURRENT OPERATION -->
+
+        <div class="operation-explanation">
+
+            <div class="operation-title">
+                <span>💡</span>
+                What is happening now?
+            </div>
+
+            <p id="operation-text">
+                Click "Add Song" to insert a song at Rear.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= COMPLEXITY ================= -->
+
+<section class="section soft-section" id="complexity">
+
+    <div class="section-heading">
+
+        <span>08 • PERFORMANCE</span>
+
+        <h2>Time Complexity</h2>
+
+        <p>
+            Main Circular Queue operations.
+        </p>
+
+    </div>
+
+
+    <div class="complexity-grid">
+
+        <div class="complexity-box">
+
+            <strong>O(1)</strong>
+
+            <h3>Enqueue</h3>
+
+            <p>
+                Insert at Rear in constant time.
+            </p>
+
+        </div>
+
+
+        <div class="complexity-box">
+
+            <strong>O(1)</strong>
+
+            <h3>Dequeue</h3>
+
+            <p>
+                Remove from Front in constant time.
+            </p>
+
+        </div>
+
+
+        <div class="complexity-box">
+
+            <strong>O(1)</strong>
+
+            <h3>Peek</h3>
+
+            <p>
+                Direct access to Front element.
+            </p>
+
+        </div>
+
+
+        <div class="complexity-box">
+
+            <strong>O(n)</strong>
+
+            <h3>Display</h3>
+
+            <p>
+                Visit queue positions.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CONCLUSION ================= -->
+
+<section class="conclusion">
+
+    <div class="conclusion-inner">
+
+        <span>09 • CONCLUSION</span>
+
+        <h2>
+            From Data Structure<br>
+            to Real Life.
+        </h2>
+
+        <p>
+            Circular Queue connects the last position back
+            to the first position. It is useful for continuous
+            processes such as music playlists.
+        </p>
+
+        <a href="#home" class="primary-btn">
+            ↑ Back to Top
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <div class="footer-logo">
+        ↻ Circular Queue
+    </div>
+
+    <p>
+        Data Structures Mini Project • Music Playlist Manager
+    </p>
+
+    <p class="footer-small">
+        Designed with ♡ using HTML, CSS & JavaScript
+    </p>
+
+</footer>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
