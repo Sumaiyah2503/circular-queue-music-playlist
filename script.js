@@ -1,19 +1,9 @@
-/* =========================================================
-   CIRCULAR QUEUE — MUSIC PLAYLIST MANAGER
-   Capacity = 10
-========================================================= */
+// ==========================================
+// CIRCULAR QUEUE - MUSIC PLAYLIST MANAGER
+// ==========================================
 
 const CAPACITY = 10;
 
-/* Queue storage */
-let queue = new Array(CAPACITY).fill(null);
-
-/* Circular Queue pointers */
-let front = -1;
-let rear = -1;
-let count = 0;
-
-/* Playlist songs */
 const songs = [
     "Song A",
     "Song B",
@@ -27,410 +17,341 @@ const songs = [
     "Song J"
 ];
 
+// Circular Queue
+let queue = new Array(CAPACITY).fill(null);
+
+let front = -1;
+let rear = -1;
+let count = 0;
+
 let nextSongIndex = 0;
+let playingIndex=-1;
 
 
-/* =========================================================
-   HTML ELEMENTS
-========================================================= */
+// ==========================================
+// GET HTML ELEMENTS
+// ==========================================
 
-const queueElement = document.getElementById("queue");
+const queueContainer = document.getElementById("queue");
 
-const frontValue = document.getElementById("front-value");
-const rearValue = document.getElementById("rear-value");
-const sizeValue = document.getElementById("size-value");
+const frontDisplay = document.getElementById("front-value");
+const rearDisplay = document.getElementById("rear-value");
+const sizeDisplay = document.getElementById("size-value");
+const stateDisplay = document.getElementById("state-value");
 
-const currentSong = document.getElementById("current-song");
-const currentStatus = document.getElementById("current-status");
+const currentSongDisplay =
+    document.getElementById("current-song");
 
-const message = document.getElementById("message");
-const operationText = document.getElementById("operation-text");
+const currentStatus =
+    document.getElementById("current-status");
 
-const heroSong = document.getElementById("hero-song");
+const heroSong =
+    document.getElementById("hero-song");
+
+const message =
+    document.getElementById("message");
+
+const operationText =
+    document.getElementById("operation-text");
 
 
-/* =========================================================
-   CREATE QUEUE VISUAL
-========================================================= */
+// ==========================================
+// DISPLAY QUEUE
+// ==========================================
 
-function createQueueSlots() {
+function renderQueue() {
 
-    queueElement.innerHTML = "";
+    queueContainer.innerHTML = "";
 
     for (let i = 0; i < CAPACITY; i++) {
 
         const slot = document.createElement("div");
 
-        slot.className = "queue-slot";
+        slot.classList.add("queue-slot");
 
-        slot.id = `slot-${i}`;
-
-        slot.innerHTML = `
-            <span class="index">INDEX ${i}</span>
-
-            <span class="empty">＋</span>
-
-            <div class="position-labels"></div>
-        `;
-
-        queueElement.appendChild(slot);
-    }
-
-    updateQueueDisplay();
-}
-
-
-/* =========================================================
-   UPDATE QUEUE VISUAL
-========================================================= */
-
-function updateQueueDisplay() {
-
-    for (let i = 0; i < CAPACITY; i++) {
-
-        const slot = document.getElementById(`slot-${i}`);
-
-        if (!slot) continue;
-
-        slot.classList.remove("front", "rear");
-
-        const index = slot.querySelector(".index");
-        const labels = slot.querySelector(".position-labels");
-
+        // Filled position
         if (queue[i] !== null) {
 
-            slot.innerHTML = `
-                <span class="index">INDEX ${i}</span>
-
-                <span class="song">
-                    🎵 ${queue[i]}
-                </span>
-
-                <div class="position-labels"></div>
-            `;
-
-        } else {
+            slot.classList.add("filled");
 
             slot.innerHTML = `
-                <span class="index">INDEX ${i}</span>
+                <div class="slot-index">${i}</div>
+                <div class="slot-song">${queue[i]}</div>
+            `;
 
-                <span class="empty">＋</span>
+            // FRONT
+            if (i === front) {
+                slot.classList.add("front-slot");
+            }
+            if (i === playingIndex) {
+    slot.classList.add("playing-slot");
+}
 
-                <span style="
-                    font-size:10px;
-                    color:#a8adbd;
-                    margin-top:4px;
-                ">
-                    Empty
-                </span>
+            // REAR
+            if (i === rear) {
+                slot.classList.add("rear-slot");
+            }
 
-                <div class="position-labels"></div>
+        }
+
+        // Empty position
+        else {
+
+            slot.innerHTML = `
+                <div class="slot-index">${i}</div>
+                <div class="slot-song">Empty</div>
             `;
         }
 
-        const labelContainer =
-            slot.querySelector(".position-labels");
-
-
-        /* Front indicator */
-
-        if (i === front && front !== -1) {
-
-            slot.classList.add("front");
-
-            labelContainer.innerHTML += `
-                <span class="front-label">
-                    FRONT
-                </span>
-            `;
-        }
-
-
-        /* Rear indicator */
-
-        if (i === rear && rear !== -1) {
-
-            slot.classList.add("rear");
-
-            labelContainer.innerHTML += `
-                <span class="rear-label">
-                    REAR
-                </span>
-            `;
-        }
+        queueContainer.appendChild(slot);
     }
 
 
-    /* Update numbers */
+    // ======================================
+    // UPDATE FRONT
+    // ======================================
 
-    if (front === -1) {
-        frontValue.textContent = "-";
-    } else {
-        frontValue.textContent = front;
-    }
+    frontDisplay.textContent =
+        front === -1 ? "-" : front;
 
-    if (rear === -1) {
-        rearValue.textContent = "-";
-    } else {
-        rearValue.textContent = rear;
-    }
 
-    sizeValue.textContent =
+    // ======================================
+    // UPDATE REAR
+    // ======================================
+
+    rearDisplay.textContent =
+        rear === -1 ? "-" : rear;
+
+
+    // ======================================
+    // UPDATE SIZE
+    // ======================================
+
+    sizeDisplay.textContent =
         `${count} / ${CAPACITY}`;
+
+
+    // ======================================
+    // UPDATE STATE
+    // ======================================
+
+    if (count === 0) {
+
+        stateDisplay.textContent = "EMPTY";
+
+    }
+
+    else if (count === CAPACITY) {
+
+        stateDisplay.textContent = "FULL";
+
+    }
+
+    else {
+
+        stateDisplay.textContent = "AVAILABLE";
+    }
 }
 
 
-/* =========================================================
-   CHECK QUEUE EMPTY
-========================================================= */
-
-function isEmpty() {
-
-    return count === 0;
-}
-
-
-/* =========================================================
-   CHECK QUEUE FULL
-========================================================= */
-
-function isFull() {
-
-    return count === CAPACITY;
-}
-
-
-/* =========================================================
-   ENQUEUE
-   ADD SONG
-========================================================= */
+// ==========================================
+// ADD SONG - ENQUEUE
+// ==========================================
 
 function addSong() {
 
-    /* Check FULL */
-
-    if (isFull()) {
+    // Check FULL condition
+    if (count === CAPACITY) {
 
         message.textContent =
-            "🔴 Queue Full! All 10 positions are occupied.";
-
-        message.className =
-            "status-message full";
+            "🔴 Queue is FULL!";
 
         operationText.textContent =
-            "ENQUEUE stopped because count = 10. " +
-            "The queue must have an empty position before inserting a new song.";
+            "All 10 positions are occupied. Play the playlist to continue.";
 
         return;
     }
 
 
-    /* Select next song */
-
+    // Get next song
     const song = songs[nextSongIndex];
 
-    nextSongIndex =
-        (nextSongIndex + 1) % songs.length;
 
+    // ======================================
+    // FIRST INSERTION
+    // ======================================
 
-    /* First insertion */
-
-    if (isEmpty()) {
+    if (count === 0) {
 
         front = 0;
         rear = 0;
 
-    } else {
+    }
 
-        /*
-            Circular movement:
+    // ======================================
+    // NEXT INSERTION
+    // ======================================
 
-            Rear = (Rear + 1) % Capacity
-        */
+    else {
 
         rear = (rear + 1) % CAPACITY;
     }
 
 
-    /* Insert song */
-
+    // Insert song
     queue[rear] = song;
 
     count++;
 
 
-    /* Update screen */
+    // Move to next song
+    nextSongIndex =
+        (nextSongIndex + 1) % songs.length;
 
-    updateQueueDisplay();
 
-
-    currentSong.textContent = song;
-
-    currentStatus.textContent =
-        `Added at index ${rear}`;
-
-    heroSong.textContent = song;
-
+    // ======================================
+    // UPDATE MESSAGE
+    // ======================================
 
     message.textContent =
-        `✨ ${song} added at Rear → Index ${rear}`;
-
-    message.className =
-        "status-message success";
-
+        `✨ ${song} added successfully!`;
 
     operationText.textContent =
-        `ENQUEUE: ${song} was inserted at Rear. ` +
-        `Rear is now ${rear}. ` +
-        `Queue size = ${count}/${CAPACITY}.`;
+        `Enqueue: ${song} was inserted at Rear = ${rear}.`;
 
 
-    /* Special wrap-around explanation */
+    currentStatus.textContent =
+        "Song added to playlist";
 
-    if (rear === 0 && count > 1) {
 
-        operationText.textContent +=
-            " 🔄 Wrap-around happened! " +
-            "Rear moved from index 9 back to index 0.";
-    }
+    renderQueue();
 }
 
 
-/* =========================================================
-   DEQUEUE
-   PLAY / REMOVE FRONT SONG
-========================================================= */
+// ==========================================
+// PLAY SONG - REPEATING CIRCULAR PLAYLIST
+// ==========================================
 
 function playSong() {
 
-    /* Check EMPTY */
-
-    if (isEmpty()) {
+    // Check EMPTY condition
+    if (count === 0) {
 
         message.textContent =
-            "🔵 Queue Empty! There is no song to play.";
+            "🫧 Queue is EMPTY!";
 
-        message.className =
-            "status-message";
-
-        currentSong.textContent =
-            "No song playing";
+        operationText.textContent =
+            "Add songs to the playlist first.";
 
         currentStatus.textContent =
             "Add songs to begin";
-
-        operationText.textContent =
-            "DEQUEUE stopped because count = 0. " +
-            "The queue is empty.";
 
         return;
     }
 
 
-    /* Store Front song */
+    // ======================================
+    // GET FRONT SONG
+    // ======================================
 
-    const playedSong = queue[front];
-
-    const oldFront = front;
-
-
-    /* Remove Front */
-
-    queue[front] = null;
-
-    count--;
+    const currentSong = queue[front];
+    playingIndex = front;
 
 
-    /* If queue becomes empty */
+    // ======================================
+    // DISPLAY CURRENT SONG
+    // ======================================
 
-    if (count === 0) {
+    currentSongDisplay.textContent =
+        currentSong;
 
-        front = -1;
-        rear = -1;
+    heroSong.textContent =
+        currentSong;
 
-        currentSong.textContent =
-            "No song playing";
-
-        currentStatus.textContent =
-            "Queue is empty";
-
-        message.textContent =
-            `🎵 ${playedSong} played. Queue is now EMPTY.`;
-
-        message.className =
-            "status-message success";
-
-        operationText.textContent =
-            `DEQUEUE: ${playedSong} was removed from Front ` +
-            `at index ${oldFront}. ` +
-            `Since count = 0, the queue is now empty.`;
-
-    } else {
-
-        /*
-            Circular movement:
-
-            Front = (Front + 1) % Capacity
-        */
-
-        front =
-            (front + 1) % CAPACITY;
+    currentStatus.textContent =
+        "Now playing";
 
 
-        currentSong.textContent =
-            playedSong;
+    message.textContent =
+        `🎵 ${currentSong} is playing!`;
 
-        currentStatus.textContent =
-            `Played from index ${oldFront}`;
-
-        heroSong.textContent =
-            playedSong;
+    operationText.textContent =
+        `Front = ${front}. ${currentSong} is being played.`;
 
 
-        message.textContent =
-            `▶ ${playedSong} played & removed from index ${oldFront}`;
 
-        message.className =
-            "status-message success";
+    // ======================================
+    // CIRCULAR MOVEMENT
+    // ======================================
 
+    /*
+       IMPORTANT:
+
+       We do NOT delete the song.
+
+       Instead, Front moves to the next song.
+
+       Example:
+
+       A → B → C → D → ... → J → A
+    */
+
+
+    front = (front + 1) % count;
+
+
+    // ======================================
+    // WRAP AROUND
+    // ======================================
+
+    if (front === 0) {
 
         operationText.textContent =
-            `DEQUEUE: ${playedSong} was removed from Front ` +
-            `at index ${oldFront}. ` +
-            `Front moved to index ${front}.`;
-
-
-        /* Wrap-around explanation */
-
-        if (front === 0 && oldFront === 9) {
-
-            operationText.textContent +=
-                " 🔄 Wrap-around happened! " +
-                "Front moved from index 9 back to index 0.";
-        }
+            `🔄 Circular movement completed! Front wrapped back to 0. ${queue[front]} is next.`;
     }
 
 
-    updateQueueDisplay();
+    /*
+       Count does NOT decrease.
+
+       Because this is a repeating
+       music playlist application.
+
+       Therefore:
+
+       A → B → C → ... → J → A → B → ...
+    */
+
+
+    renderQueue();
 }
 
 
-/* =========================================================
-   RESET QUEUE
-========================================================= */
+// ==========================================
+// RESET QUEUE
+// ==========================================
 
 function resetQueue() {
 
+    // Clear queue
     queue = new Array(CAPACITY).fill(null);
 
+
+    // Reset pointers
     front = -1;
     rear = -1;
+
+
+    // Reset count
     count = 0;
 
+
+    // Start again from Song A
     nextSongIndex = 0;
 
 
-    currentSong.textContent =
+    // Reset display
+    currentSongDisplay.textContent =
         "No song playing";
 
     currentStatus.textContent =
@@ -442,61 +363,45 @@ function resetQueue() {
     message.textContent =
         "✨ Playlist is ready. Add your first song!";
 
-    message.className =
-        "status-message";
-
-
     operationText.textContent =
-        'Click "Add Song" to insert a song at the Rear.';
+        'Click "Add Song" to insert a song at Rear.';
 
 
-    updateQueueDisplay();
+    renderQueue();
 }
 
 
-/* =========================================================
-   INITIALIZE
-========================================================= */
+// ==========================================
+// KEYBOARD SHORTCUTS
+// ==========================================
 
-createQueueSlots();
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        // A → Add Song
+        if (event.key.toLowerCase() === "a") {
+            addSong();
+        }
 
 
-/* =========================================================
-   OPTIONAL KEYBOARD SHORTCUTS
-========================================================= */
+        // P → Play Song
+        if (event.key.toLowerCase() === "p") {
+            playSong();
+        }
 
-document.addEventListener("keydown", function(event) {
 
-    /* A = Add */
+        // R → Reset
+        if (event.key.toLowerCase() === "r") {
+            resetQueue();
+        }
 
-    if (
-        event.key.toLowerCase() === "a" &&
-        !event.ctrlKey &&
-        !event.altKey
-    ) {
-        addSong();
     }
+);
 
 
-    /* P = Play / Dequeue */
+// ==========================================
+// INITIAL DISPLAY
+// ==========================================
 
-    if (
-        event.key.toLowerCase() === "p" &&
-        !event.ctrlKey &&
-        !event.altKey
-    ) {
-        playSong();
-    }
-
-
-    /* R = Reset */
-
-    if (
-        event.key.toLowerCase() === "r" &&
-        !event.ctrlKey &&
-        !event.altKey
-    ) {
-        resetQueue();
-    }
-
-});
+renderQueue();
